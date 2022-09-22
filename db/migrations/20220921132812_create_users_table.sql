@@ -1,0 +1,14 @@
+-- migrate:up
+CREATE TABLE users(
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    point INT NOT NULL,
+    grade_id INT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_users_grade_id FOREIGN KEY (grade_id) REFERENCES grades (id)
+);
+
+-- migrate:down
+DROP TABLE users;
