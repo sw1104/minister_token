@@ -17,7 +17,7 @@ describe("POINT GET TEST", () => {
     
     test("SUCCESS: POINT GET", async () => {
         await request(app)
-        .patch("/dashboard")
+        .patch("/point")
         .send({ userID, pointCount })
         .expect(201)
         .expect({ data })
@@ -25,7 +25,7 @@ describe("POINT GET TEST", () => {
 
     test("FAIL: POINT GET", async () => {
         await request(app)
-        .patch("/dashboard")
+        .patch("/point")
         .send({ userID, pointCount })
         .expect(400)
         .expect({ message: "USER MATCH MISS" })
