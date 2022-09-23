@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const secret = process.env.JWT_SECRET;
 const userDao = require("../models/userDao");
-
+require("dotenv").config();
 
 module.exports = {
     sign (userId) {

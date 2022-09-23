@@ -52,7 +52,7 @@ const refresh = async (req, res) => {
     } else {
       res.status(400).json({
         ok: false,
-        message: 'Acess token is not expired!',
+        message: 'Access token is not expired!',
       });
     }
   } else {
