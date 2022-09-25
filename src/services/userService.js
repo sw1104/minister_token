@@ -51,8 +51,8 @@ const signIn = async (email, password) => {
         const id = JSON.stringify(Object.values(payLoadId[0])[0]);
         const payLoadGrade = await userDao.getUserGradeByEmail(email);
         const grade = JSON.stringify(Object.values(payLoadGrade[0])[0]);
-        const refreshToken = jwt.sign({ userId : id, exp : Math.floor(Date.now()/1000) + (86400*14) }, process.env.JWT_SECRET);
-        const accessToken = jwt.sign({ userId : id, userGrade : grade, exp: Math.floor(Date.now()/1000) + (3600*2) }, process.env.JWT_SECRET);
+        const refreshToken = jwt.sign({ exp : Math.floor(Date.now()/1000) + (60*1) }, process.env.JWT_SECRET);
+        const accessToken = jwt.sign({ userId : id, userGrade : grade, exp: Math.floor(Date.now()/1000) + (60*1) }, process.env.JWT_SECRET);
         
         return {
             refreshToken, 

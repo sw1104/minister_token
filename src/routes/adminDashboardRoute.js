@@ -13,6 +13,10 @@ router.get("/personal", validation, errorHandler(adminDashboard.getPersonalToken
 router.get("/newissued", validation, errorHandler(adminDashboard.getNewIssuedToken))
 // router.get("/test", adminDashboard.getDashboard)
 // router.get("/test", adminDashboard.getDashboard)
+router.get("/dashboard", validation, errorHandler(adminDashboard.getUserTokenInfo))
+router.get("/exchange", validation, errorHandler(adminDashboard.getUserExchangeInfo))
+router.patch("/token/approve", validation, errorHandler(adminDashboard.patchApplyStateApprove))
+router.patch("/token/reject", validation, errorHandler(adminDashboard.patchApplyStateReject))
 
 module.exports = {
     router
