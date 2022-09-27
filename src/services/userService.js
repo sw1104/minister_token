@@ -30,9 +30,9 @@ const signUp = async (email, password) => {
 
 const signIn = async (email, password) => {
     const userEmail = await userDao.checkEmail(email);
-    // const emailResult = JSON.stringify(Object.values(userEmail[0])[0]);
+    const emailResult = JSON.stringify(Object.values(userEmail[0])[0]);
     const emailCheck = emailResult.replace (/\"/gi,'');
-    if(emailCheck == false) {
+    if(emailCheck == 0) {
         throw new Error("KEY ERROR", 400);
     }
     const getBcrypt = await userDao.checkPassword(email);
@@ -40,18 +40,20 @@ const signIn = async (email, password) => {
     if ( !decode ) {
         throw new Error ("KEY ERROR", 400);
     }
-
+    
     const grade = await userDao.checkGrade(email);
     const gradeResult = JSON.stringify(Object.values(grade[0])[0]);
     const userGrade = gradeResult.replace (/\"/gi,'');
-
+    
     if ( userGrade == "admin") {
         let message = "HELLO"
         const payLoadId = await userDao.getUserIdByEmail(email);
         const id = JSON.stringify(Object.values(payLoadId[0])[0]);
+        const payLoadGrade = await userDao.getUserGradeByEmail(email);
+        const grade = JSON.stringify(Object.values(payLoadGrade[0])[0]);
         const refreshToken = jwt.sign({ userId : id, exp : Math.floor(Date.now()/1000) + (86400*14) }, process.env.JWT_SECRET);
-        const accessToken = jwt.sign({ userId : id, exp: Math.floor(Date.now()/1000) + (3600*1) }, process.env.JWT_SECRET);
-
+        const accessToken = jwt.sign({ userId : id, userGrade : grade, exp: Math.floor(Date.now()/1000) + (3600*2) }, process.env.JWT_SECRET);
+        
         return {
             refreshToken, 
             accessToken,
@@ -62,10 +64,12 @@ const signIn = async (email, password) => {
         let message = "WELCOME";
         const payLoadId = await userDao.getUserIdByEmail(email);
         const id = JSON.stringify(Object.values(payLoadId[0])[0]);
+        const payLoadGrade = await userDao.getUserGradeByEmail(email);
+        const grade = JSON.stringify(Object.values(payLoadGrade[0])[0]);
         const refreshToken = jwt.sign({ exp : Math.floor(Date.now()/1000) + (86400*14) }, process.env.JWT_SECRET);
-        const accessToken = jwt.sign({ userId : id, userGrade : grade_id,   exp: Math.floor(Date.now()/1000) + (60*2) }, process.env.JWT_SECRET);
+        const accessToken = jwt.sign({ userId : id, userGrade : grade, exp: Math.floor(Date.now()/1000) + (60*2) }, process.env.JWT_SECRET);
         await userDao.addToken(email, refreshToken);
-
+        
         return {
             refreshToken, 
             accessToken,
