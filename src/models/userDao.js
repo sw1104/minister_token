@@ -95,6 +95,14 @@ const getUserGradeByEmail = async(email) => {
     )
 }
 
+const getUserGradeByUserId = async(userId) => {
+    return await AppDataSource.query(
+        `
+        SELECT grade_id FROM users WHERE id = "${userId}";
+        `
+    )
+}
+
 module.exports = {
     checkEmail,
     signUp,
@@ -106,5 +114,6 @@ module.exports = {
     getUserIdByUserId,
     deleteRefresh,
     updateToken,
-    getUserGradeByEmail
+    getUserGradeByEmail,
+    getUserGradeByUserId,
 }

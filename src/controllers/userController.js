@@ -10,7 +10,8 @@ const signUp = async (req, res ) => {
 }
 
 const signIn = async (req, res) => {
-    const { email, password } = req.body;
+    console.log(info);
+    const { email, password } = req.query;
     if ( !email || !password ) {
         return res.status(404).json({"message" : "KEY ERROR"})
     } else {
