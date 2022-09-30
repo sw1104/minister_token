@@ -48,7 +48,7 @@ const getFullToken = async () => {
             full_token AS fullToken
         FROM master_wallets
         `
-    ) 
+    )
 }
 
 const getRemainToken = async () => {
@@ -98,9 +98,11 @@ const getPersonalToken = async () => {
     return await AppDataSource.query(
         `
         SELECT 
-            user_id, 
-            all_token
-        FROM wallets
+            w.user_id,
+            u.email,
+            w.all_token
+        FROM wallets w 
+        INNER JOIN users u ON u.id = w.user_id
         `
     )
 }
@@ -109,10 +111,13 @@ const getNewIssuedToken = async () => {
     return await AppDataSource.query(
         `
         SELECT 
-            user_id, 
-            add_token 
-        FROM wallets 
-        ORDER BY updated_at desc
+            w.user_id, 
+            u.email,
+            w.add_token,
+            w.updated_at
+        FROM wallets w
+        INNER JOIN users u ON u.id = w.user_id
+        ORDER BY w.updated_at desc
         `
     )
 }

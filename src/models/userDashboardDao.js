@@ -41,15 +41,15 @@ const getTokenUseHistory = async (userId) => {
         `
         SELECT 
             o.user_id, 
-            o.product_id, 
+            o.product_id,
             products.name, 
             products.price, 
             o.updated_at 
         FROM orders o 
-        INNER JOIN users ON users.id = o.user_id 
+        INNER JOIN users u ON u.id = o.user_id 
         INNER JOIN products ON products.id = o.product_id 
-        WHERE users.id = ${userId}
-        ORDER BY o.updated_at DESC;
+        WHERE u.id = ${userId}
+        ORDER BY o.updated_at DESC
         `
     )
 }
@@ -71,7 +71,7 @@ const createWallet = async (userId) => {
     return await AppDataSource.query(
         `
         INSERT INTO wallets (
-            user_id, all_token, add_token, use_token, remain_token, collect_token
+            user_id, all_token, add_token, use_token, stack_token, collect_token
         ) VALUES (?, 0, 0, 0, 0, 0)
         `, [userId]
     )
@@ -118,14 +118,14 @@ const priceProduct = async (productId) => {
     )
 }
 
-const buyProduct = async ( userId, productId ) => {
+const buyProduct = async (userId, productId) => {
     return await AppDataSource.query(
         `
         INSERT INTO orders(
             user_id, product_id
         ) VALUES (?, ?)
         `,
-        [ userId, productId ]
+        [userId, productId]
     )
 }
 
@@ -142,7 +142,7 @@ const getRemainToken = async (userId, productId) => {
         SET
             w.all_token = w.all_token - p.price,
             w.use_token = p.price,
-            w.remain_token = w.use_token + w.remain_token
+            w.stack_token = w.use_token + w.stack_token
         WHERE w.user_id = ${userId} AND ${productId} = p.id
         `
     )
@@ -152,14 +152,14 @@ const getCumulativeToken = async (userId) => {
     return await AppDataSource.query(
         `
         SELECT 
-            remain_token
+            stack_token
         FROM wallets
         WHERE user_id = ${userId}
         `
     )
 }
 
-const gradeUp = async ( userId, gradeId ) => {
+const gradeUp = async (userId, gradeId) => {
     return await AppDataSource.query(
         `
         UPDATE users
@@ -170,7 +170,7 @@ const gradeUp = async ( userId, gradeId ) => {
     )
 }
 
-const exchangeReq = async ( userId ) => {
+const exchangeReq = async (userId) => {
     return await AppDataSource.query(
         `
         SELECT 
