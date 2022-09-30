@@ -10,8 +10,25 @@ const getOrderInfo = async (userId) => {
     return getInfo
 }
 
+const patchApplyStateApprove = async (applyArray) => {
+    console.log(applyArray);
+    for(let i = 0; i < applyArray.length; i++) {
+        const applyNo = applyArray[i];
+        console.log("inner for", applyNo);
+        const patchState = await dashBoardDao.patchStateApprove(applyNo);
+    }
+    return patchState
+}
+
+const patchApplyStateReject = async (userId, applyNo) => {
+    const patchState = await dashBoardDao.patchStateReject(userId, applyNo);
+    return patchState
+}
+
 module.exports = {
     getTokenInfo,
-    getOrderInfo
+    getOrderInfo,
+    patchApplyStateApprove,
+    patchApplyStateReject
 }
 

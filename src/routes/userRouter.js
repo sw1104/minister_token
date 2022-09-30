@@ -10,7 +10,7 @@ router.post("/signin", errorHandler(userController.signIn));
 
 router.post("/signup", errorHandler(userController.signUp));
 
-router.get("/auth", validation, errorHandler(userController.signIn));
+router.get("/auth", validation);
 
 router.post("/refresh", refresh)
 
