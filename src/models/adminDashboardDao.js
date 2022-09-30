@@ -48,7 +48,7 @@ const getFullToken = async () => {
             full_token AS fullToken
         FROM master_wallets
         `
-    ) 
+    )
 }
 
 const getRemainToken = async () => {
@@ -98,9 +98,11 @@ const getPersonalToken = async () => {
     return await AppDataSource.query(
         `
         SELECT 
-            user_id, 
-            all_token
-        FROM wallets
+            w.user_id,
+            u.email,
+            w.all_token
+        FROM wallets w 
+        INNER JOIN users u ON u.id = w.user_id
         `
     )
 }
@@ -109,10 +111,12 @@ const getNewIssuedToken = async () => {
     return await AppDataSource.query(
         `
         SELECT 
-            user_id, 
-            add_token 
-        FROM wallets 
-        ORDER BY updated_at desc
+            u.email,
+            h.add_token
+        FROM histories h
+        INNER JOIN users u ON u.id = h.user_id
+        WHERE h.add_token > 0 AND h.state_id = 2
+        ORDER BY h.updated_at DESC LIMIT 24
         `
     )
 }
@@ -122,6 +126,7 @@ const getTokenInfo = async () => {
         `
         SELECT
             u.email,
+            u.id userId,
             g.grade,
             wh.id,
             wh.all_token,
@@ -141,6 +146,7 @@ const getExchangeInfo = async () => {
         `
         SELECT 
         u.email,
+        u.id userId,
 		wh.add_token,
         s.state,
         DATE_FORMAT(wh.updated_at, '%Y-%c-%e') AS date
@@ -156,7 +162,7 @@ const getExchangeInfo = async () => {
 const patchStateApprove = async (applyNo) => {
     return await AppDataSource.query(
         `
-        UPDAte wallet_histories wh SET state_id = 2 WHERE wh.id = ${applyNo}
+        UPDATE wallet_histories wh SET state_id = 2 WHERE wh.id = ${applyNo}
         `
     )
 }
@@ -165,7 +171,7 @@ const patchStateReject = async (applyNo) => {
     console.log(applyNo);
     return await AppDataSource.query(
         `
-        UPDAte wallet_histories wh SET state_id = 3 WHERE wh.id = ${applyNo}
+        UPDATE wallet_histories wh SET state_id = 3 WHERE wh.id = ${applyNo}
         `
     )
 }

@@ -2,14 +2,17 @@ const adminDao = require("../models/adminDao")
 const userDashboardDao = require("../models/userDashboardDao")
 
 const acceptExchange = async ( userId ) => {
-    const getPoint = await userDashboardDao.getPoint(userId)
-    const point = Object.values(getPoint[0])[1]
+    const getExchangeInfo = await adminDao.infoExchange( userId )
+    const allToken = Object.values(getExchangeInfo[0])[1]
+    const addToken = Object.values(getExchangeInfo[0])[2]
 
-    let dePoint = point - parseInt((point+'').split('').splice(-3).join(''))
+    let stateId = 2;
 
-    let addToken = (dePoint+'').replace(/0{3}$/g,'')*1
+    await adminDao.acceptExchangeH( userId, allToken, addToken, stateId )
+    await adminDao.acceptExchangeWH( userId, stateId)
+
     
-    return await adminDao.acceptExchange( userId, addToken, dePoint )
+    return await adminDao.acceptExchange( userId, addToken)
 }
 
 const tokenCollect = async ( userId ) => {

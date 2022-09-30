@@ -3,40 +3,41 @@ const Error = require("../middlewares/errorConstructor")
 
 const getFullToken = async (req, res) => {
     const { userGrade } = req.body;
-    if( !userGrade ) throw new err("KEY ERROR", 400)
-    const data = await adminDashboardService.getFullToken( userGrade );
-    res.status(200).json( data )
+    if (!userGrade) throw new err("KEY ERROR", 400)
+    const data = await adminDashboardService.getFullToken(userGrade);
+    res.status(200).json(data)
 }
 const getRemainToken = async (req, res) => {
     const { userGrade } = req.body;
-    if( !userGrade ) throw new Error("KEY ERROR", 400)
-    const data = await adminDashboardService.getRemainToken( userGrade );
-    res.status(200).json( data )
+    if (!userGrade) throw new Error("KEY ERROR", 400)
+    const data = await adminDashboardService.getRemainToken(userGrade);
+    res.status(200).json(data)
 }
 const getIssuedToken = async (req, res) => {
     const { userGrade } = req.body;
-    if( !userGrade ) throw new Error("KEY ERROR", 400)
-    const data = await adminDashboardService.getIssuedToken( userGrade );
-    res.status(200).json( data )
+    if (!userGrade) throw new Error("KEY ERROR", 400)
+    const data = await adminDashboardService.getIssuedToken(userGrade);
+    res.status(200).json(data)
 }
 const getMembers = async (req, res) => {
     const { userGrade } = req.body;
-    if( !userGrade ) throw new Error("KEY ERROR", 400)
-    const data = await adminDashboardService.getMembers( userGrade );
-    res.status(200).json( data )
+    if (!userGrade) throw new Error("KEY ERROR", 400)
+    const data = await adminDashboardService.getMembers(userGrade);
+    res.status(200).json(data)
 }
 const getPersonalToken = async (req, res) => {
     const { userGrade } = req.body;
-    if( !userGrade ) throw new Error("KEY ERROR", 400)
-    const data = await adminDashboardService.getPersonalToken( userGrade );
-    res.status(200).json({ personal : data })
+    if (!userGrade) throw new Error("KEY ERROR", 400)
+    const data = await adminDashboardService.getPersonalToken(userGrade);
+    res.status(200).json({ personal: data })
 }
 const getNewIssuedToken = async (req, res) => {
     const { userGrade } = req.body;
-    if( !userGrade ) throw new Error("KEY ERROR", 400)
-    const data = await adminDashboardService.getNewIssuedToken( userGrade );
-    res.status(200).json({ newIssued : data })
+    if (!userGrade) throw new Error("KEY ERROR", 400)
+    const data = await adminDashboardService.getNewIssuedToken(userGrade);
+    res.status(200).json({ newIssued: data })
 }
+
 // const get = async (req, res) => {
 //     const { grade } = req.body;
 //     if( !grade ) throw err
@@ -64,8 +65,11 @@ const getUserExchangeInfo = async (req, res) => {
 
 const patchApplyStateApprove = async (req, res) => {
     const applyArray = req.body.array;
+    const userId = req.body.userIdArray[0]
     if (applyArray.length !== 0) {
-        const patchApplyState = await adminDashboardService.patchApplyStateApprove(applyArray);
+
+        const patchApplyState = await adminDashboardService.patchApplyStateApprove(applyArray, userId);
+
         return res.status(200).json(patchApplyState);
     } else {
         return res.status(400).json({"message" : "INVAILD_DATA_INPUT"});
@@ -74,9 +78,9 @@ const patchApplyStateApprove = async (req, res) => {
 
 const patchApplyStateReject = async (req, res) => {
     const applyArray = req.body.array;
-    console.log(applyArray);
+    const userId = req.body.userIdArray[0]
     if (applyArray !== undefined) {
-        const patchApplyState = await adminDashboardService.patchApplyStateReject(applyArray);
+        const patchApplyState = await adminDashboardService.patchApplyStateReject(applyArray, userId);
         return res.status(200).json(patchApplyState);
     } else if (applyArray === undefined) {
         return res.status(400).json({"message" : "INVAILD_DATA_INPUT"});

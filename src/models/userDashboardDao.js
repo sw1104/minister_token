@@ -41,15 +41,15 @@ const getTokenUseHistory = async (userId) => {
         `
         SELECT 
             o.user_id, 
-            o.product_id, 
+            o.product_id,
             products.name, 
             products.price, 
             o.updated_at 
         FROM orders o 
-        INNER JOIN users ON users.id = o.user_id 
+        INNER JOIN users u ON u.id = o.user_id 
         INNER JOIN products ON products.id = o.product_id 
-        WHERE users.id = ${userId}
-        ORDER BY o.updated_at DESC;
+        WHERE u.id = ${userId}
+        ORDER BY o.updated_at DESC
         `
     )
 }
@@ -71,7 +71,7 @@ const createWallet = async (userId) => {
     return await AppDataSource.query(
         `
         INSERT INTO wallets (
-            user_id, all_token, add_token, use_token, remain_token, collect_token
+            user_id, all_token, add_token, use_token, stack_token, collect_token
         ) VALUES (?, 0, 0, 0, 0, 0)
         `, [userId]
     )
@@ -118,14 +118,14 @@ const priceProduct = async (productId) => {
     )
 }
 
-const buyProduct = async ( userId, productId ) => {
+const buyProduct = async (userId, productId) => {
     return await AppDataSource.query(
         `
         INSERT INTO orders(
             user_id, product_id
         ) VALUES (?, ?)
         `,
-        [ userId, productId ]
+        [userId, productId]
     )
 }
 
@@ -142,7 +142,7 @@ const getRemainToken = async (userId, productId) => {
         SET
             w.all_token = w.all_token - p.price,
             w.use_token = p.price,
-            w.remain_token = w.use_token + w.remain_token
+            w.stack_token = w.use_token + w.stack_token
         WHERE w.user_id = ${userId} AND ${productId} = p.id
         `
     )
@@ -152,14 +152,14 @@ const getCumulativeToken = async (userId) => {
     return await AppDataSource.query(
         `
         SELECT 
-            remain_token
+            stack_token
         FROM wallets
         WHERE user_id = ${userId}
         `
     )
 }
 
-const gradeUp = async ( userId, gradeId ) => {
+const gradeUp = async (userId, gradeId) => {
     return await AppDataSource.query(
         `
         UPDATE users
@@ -170,17 +170,75 @@ const gradeUp = async ( userId, gradeId ) => {
     )
 }
 
-const exchangeReq = async ( userId ) => {
+const getWallet = async (userId) => {
     return await AppDataSource.query(
         `
         SELECT 
-            u.email,
-            u.point,
-            u.grade_id,
-            w.all_token
-        FROM users u
-        INNER JOIN wallets w ON u.id = w.user_id
-        WHERE u.id = ${userId}
+            id
+        FROM wallets w
+        WHERE w.user_id = ${userId}
+        `
+    )
+}
+    
+const initPoint = async (userId, rePoint) => {
+    return await AppDataSource.query(
+        `
+        UPDATE 
+            users
+        SET
+            point = ${rePoint}
+        WHERE id = ${userId}
+        `
+    )
+}
+
+const exchangeReq = async ( userId, allToken, addToken ) => {
+    return await AppDataSource.query(
+        `
+        INSERT INTO wallet_histories(
+            user_id, all_token, add_token, use_token, stack_token, collect_token, state_id
+        ) VALUES (?,?,?,0,0,0,1)
+        `,
+        [`${userId}`, `${allToken}`, `${addToken}`]
+    )
+}
+
+const existsUserWH = async ( userId ) => {
+    return await AppDataSource.query(
+        `
+        SELECT EXISTS(
+            SELECT
+                user_id
+            FROM wallet_histories
+            WHERE user_id = ${userId}
+        )
+        `
+    )
+}
+
+const existsStateWH = async ( userId ) => {
+    return await AppDataSource.query(
+        `
+        SELECT
+            state_id
+        FROM wallet_histories w
+        WHERE w.user_id = ${userId}
+        `
+    )
+}
+
+const patchExReq = async ( userId, addToken ) => {
+    return await AppDataSource.query(
+        `
+        UPDATE
+            wallet_histories AS wh
+        INNER JOIN wallets AS w ON wh.user_id = w.user_id 
+        SET
+            wh.all_token = w.all_token,
+            wh.add_token = ${addToken},
+            wh.state_id = 1
+        WHERE wh.user_id = ${userId}
         `
     )
 }
@@ -199,5 +257,10 @@ module.exports = {
     getRemainToken,
     getCumulativeToken,
     gradeUp,
-    exchangeReq
+    getWallet,
+    initPoint,
+    exchangeReq,
+    existsUserWH,
+    patchExReq,
+    existsStateWH
 }

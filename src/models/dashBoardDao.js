@@ -39,7 +39,7 @@ const getExchangeInfo = async (userId) => {
 const patchStateApprove = async (applyNo) => {
     return await AppDataSource.query(
         `
-        UPDAte wallet_histories wh SET state_id = 2 WHERE wh.id = ${applyNo}
+        UPDATE wallet_histories wh SET state_id = 2 WHERE wh.id = ${applyNo}
         `
     )
 }
@@ -47,7 +47,7 @@ const patchStateApprove = async (applyNo) => {
 const patchStateReject = async (applyNo) => {
     return await AppDataSource.query(
         `
-        UPDAte wallet_histories wh SET state_id = 3 WHERE wh.id = ${applyNo}
+        UPDATE wallet_histories wh SET state_id = 3 WHERE wh.id = ${applyNo}
         `
     )
 }

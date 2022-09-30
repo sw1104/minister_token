@@ -1,23 +1,22 @@
 const express = require("express");
 const router = express.Router();
-const errorHandler = require("../middlewares/errorHandler")
-const validation = require("../middlewares/authUser")
-const adminValidation = require("../middlewares/authAdmin");
+
+const validationAdmin = require("../middlewares/authAdmin");
 
 const adminDashboard = require("../controllers/adminDashboardController")
 
-router.get("/full", validation, errorHandler(adminDashboard.getFullToken))
-router.get("/remain", validation, errorHandler(adminDashboard.getRemainToken))
-router.get("/issued", validation, errorHandler(adminDashboard.getIssuedToken))
-router.get("/members", validation, errorHandler(adminDashboard.getMembers))
-router.get("/personal", validation, errorHandler(adminDashboard.getPersonalToken))
-router.get("/newissued", validation, errorHandler(adminDashboard.getNewIssuedToken))
+router.get("/full", validationAdmin, adminDashboard.getFullToken)
+router.get("/remain", validationAdmin, adminDashboard.getRemainToken)
+router.get("/issued", validationAdmin, adminDashboard.getIssuedToken)
+router.get("/members", validationAdmin, adminDashboard.getMembers)
+router.get("/personal", validationAdmin, adminDashboard.getPersonalToken)
+router.get("/newissued", validationAdmin, adminDashboard.getNewIssuedToken)
 // router.get("/test", adminDashboard.getDashboard)
 // router.get("/test", adminDashboard.getDashboard)
-router.get("/dashboard", adminValidation, errorHandler(adminDashboard.getUserTokenInfo))
-router.get("/exchange", adminValidation, errorHandler(adminDashboard.getUserExchangeInfo))
-router.patch("/token/approve", adminValidation, errorHandler(adminDashboard.patchApplyStateApprove))
-router.patch("/token/reject", adminValidation, errorHandler(adminDashboard.patchApplyStateReject))
+router.get("/dashboard", validationAdmin, adminDashboard.getUserTokenInfo)
+router.get("/exchange", validationAdmin, adminDashboard.getUserExchangeInfo)
+router.patch("/token/approve", validationAdmin, adminDashboard.patchApplyStateApprove)
+router.patch("/token/reject", validationAdmin, adminDashboard.patchApplyStateReject)
 
 module.exports = {
     router
