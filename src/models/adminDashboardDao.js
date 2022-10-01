@@ -117,7 +117,7 @@ const getNewIssuedToken = async () => {
     )
 }
 
-const getTokenInfo = async (userId) => {
+const getTokenInfo = async () => {
     return await AppDataSource.query(
         `
         SELECT
@@ -136,7 +136,7 @@ const getTokenInfo = async (userId) => {
     )
 }
 
-const getExchangeInfo = async (userId) => {
+const getExchangeInfo = async () => {
     return await AppDataSource.query(
         `
         SELECT 

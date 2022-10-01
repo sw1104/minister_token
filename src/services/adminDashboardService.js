@@ -37,13 +37,13 @@ const getNewIssuedToken = async ( grade ) => {
     } throw new Error("GRADE ERROR", 400)
 }
 
-const getTokenInfo = async (userId) => {
-    const getInfo = await adminDashboardDao.getTokenInfo(userId);
+const getTokenInfo = async () => {
+    const getInfo = await adminDashboardDao.getTokenInfo();
     return getInfo
 }
 
-const getExchangeInfo = async (userId) => {
-    const getInfo = await adminDashboardDao.getExchangeInfo(userId);
+const getExchangeInfo = async () => {
+    const getInfo = await adminDashboardDao.getExchangeInfo();
     return getInfo
 }
 

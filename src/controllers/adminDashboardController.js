@@ -51,14 +51,14 @@ const getNewIssuedToken = async (req, res) => {
 // }
 
 const getUserTokenInfo = async (req, res) => {
-    const userId = info.userId;
-    const getUserTokenInfo = await adminDashboardService.getTokenInfo(userId);
+    // const userId = info.userId;
+    const getUserTokenInfo = await adminDashboardService.getTokenInfo();
     return res.status(200).json({"Token_Info" : getUserTokenInfo});
 }
 
 const getUserExchangeInfo = async (req, res) => {
-    const userId = info.userId;
-    const getUserExchangeInfo = await adminDashboardService.getExchangeInfo(userId);
+    // const userId = info.userId;
+    const getUserExchangeInfo = await adminDashboardService.getExchangeInfo();
     return res.status(200).json({"Order_Info" : getUserExchangeInfo});
 }
 
