@@ -1,7 +1,7 @@
 const express = require("express")
 const router = express.Router();
 const errorHandler = require("../middlewares/errorHandler")
-const validation = require("../middlewares/auth");
+const validation = require("../middlewares/authUser");
 
 const adminController = require("../controllers/amdinController")
 

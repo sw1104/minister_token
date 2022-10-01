@@ -50,11 +50,48 @@ const getNewIssuedToken = async (req, res) => {
 //     res.status(200).json( data )
 // }
 
+const getUserTokenInfo = async (req, res) => {
+    // const userId = info.userId;
+    const getUserTokenInfo = await adminDashboardService.getTokenInfo();
+    return res.status(200).json({"Token_Info" : getUserTokenInfo});
+}
+
+const getUserExchangeInfo = async (req, res) => {
+    // const userId = info.userId;
+    const getUserExchangeInfo = await adminDashboardService.getExchangeInfo();
+    return res.status(200).json({"Order_Info" : getUserExchangeInfo});
+}
+
+const patchApplyStateApprove = async (req, res) => {
+    const applyArray = req.body.array;
+    if (applyArray.length !== 0) {
+        const patchApplyState = await adminDashboardService.patchApplyStateApprove(applyArray);
+        return res.status(200).json(patchApplyState);
+    } else {
+        return res.status(400).json({"message" : "INVAILD_DATA_INPUT"});
+    }
+}
+
+const patchApplyStateReject = async (req, res) => {
+    const applyArray = req.body.array;
+    console.log(applyArray);
+    if (applyArray !== undefined) {
+        const patchApplyState = await adminDashboardService.patchApplyStateReject(applyArray);
+        return res.status(200).json(patchApplyState);
+    } else if (applyArray === undefined) {
+        return res.status(400).json({"message" : "INVAILD_DATA_INPUT"});
+    }
+}
+
 module.exports = {
     getFullToken,
     getRemainToken,
     getIssuedToken,
     getMembers,
     getPersonalToken,
-    getNewIssuedToken
+    getNewIssuedToken,
+    getUserTokenInfo,
+    getUserExchangeInfo,
+    patchApplyStateApprove,
+    patchApplyStateReject
 }
