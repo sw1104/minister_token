@@ -1,18 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const errorHandler = require("../middlewares/errorHandler")
-const validation = require("../middlewares/authUser");
+
+const validationAdmin = require("../middlewares/authAdmin");
+const validationUser = require("../middlewares/authUser");
 
 const userDashboard = require("../controllers/userDashboardController");
 
-router.get("/point", validation, errorHandler(userDashboard.getPoint))
-router.get("/grade", validation, errorHandler(userDashboard.getGrade))
-router.get("/product", errorHandler(userDashboard.getProducts))
-router.get("/history", validation, errorHandler(userDashboard.getTokenUseHistory))
-router.post("/wallet", validation, errorHandler(userDashboard.createWallet))
-router.patch("/point", validation, errorHandler(userDashboard.earnPoint))
-router.post("/order", validation, errorHandler(userDashboard.buyProduct))
-router.post("/exchange", validation, errorHandler(userDashboard.exchangeReq))
+router.get("/point", validationUser, userDashboard.getPoint)
+router.get("/token", validationUser, userDashboard.getAllToken)
+router.get("/grade", validationUser, userDashboard.getGrade)
+router.get("/product", userDashboard.getProducts)
+router.get("/history", validationUser, userDashboard.getTokenUseHistory)
+router.post("/wallet", validationUser, userDashboard.createWallet)
+router.get("/earnpoint", validationUser, userDashboard.earnPoint)
+router.post("/order", validationUser, userDashboard.buyProduct)
+router.post("/exchange", validationUser, userDashboard.exchangeReq)
 
 module.exports = {
     router
