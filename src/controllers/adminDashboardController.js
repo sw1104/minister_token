@@ -38,27 +38,12 @@ const getNewIssuedToken = async (req, res) => {
     res.status(200).json({ newIssued: data })
 }
 
-// const get = async (req, res) => {
-//     const { grade } = req.body;
-//     if( !grade ) throw err
-//     const data = await dashboardService.getDashboard( grade );
-//     res.status(200).json( data )
-// }
-// const getFullToken = async (req, res) => {
-//     const { grade } = req.body;
-//     if( !grade ) throw err
-//     const data = await dashboardService.getDashboard( grade );
-//     res.status(200).json( data )
-// }
-
 const getUserTokenInfo = async (req, res) => {
-    // const userId = info.userId;
     const getUserTokenInfo = await adminDashboardService.getTokenInfo();
     return res.status(200).json({"Token_Info" : getUserTokenInfo});
 }
 
 const getUserExchangeInfo = async (req, res) => {
-    // const userId = info.userId;
     const getUserExchangeInfo = await adminDashboardService.getExchangeInfo();
     return res.status(200).json({"Order_Info" : getUserExchangeInfo});
 }
@@ -67,9 +52,7 @@ const patchApplyStateApprove = async (req, res) => {
     const applyArray = req.body.array;
     const userId = req.body.userIdArray[0]
     if (applyArray.length !== 0) {
-
         const patchApplyState = await adminDashboardService.patchApplyStateApprove(applyArray, userId);
-
         return res.status(200).json(patchApplyState);
     } else {
         return res.status(400).json({"message" : "INVAILD_DATA_INPUT"});

@@ -3,7 +3,6 @@ const Error = require("../middlewares/errorHandler")
 
 const acceptExchange = async (req, res) => {
     const { userId } = req.body;
-    console.log(req.body);
 
     if (!userId) throw new Error("KEY ERROR", 400)
 
@@ -12,7 +11,6 @@ const acceptExchange = async (req, res) => {
 }
 
 const tokenCollect = async (req, res) => {
-    console.log(req.body);
     const { userId } = req.body;
 
     if (!userId) throw new Error("KEY ERROR", 400)
