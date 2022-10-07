@@ -95,7 +95,6 @@ const getTokenInfo = async () => {
         LEFT JOIN users u ON wh.user_id = u.id
         LEFT JOIN grades g ON u.grade_id = g.id
         WHERE wh.state_id = 1
-        
         `
     )
 }
@@ -106,14 +105,14 @@ const getExchangeInfo = async () => {
         SELECT 
         u.email,
         u.id userId,
-		wh.add_token,
+		h.add_token,
         s.state,
-        DATE_FORMAT(wh.updated_at, '%Y-%c-%e') AS date
+        DATE_FORMAT(h.updated_at, '%Y-%c-%e') AS date
         FROM users u
-        LEFT JOIN wallet_histories wh ON u.id = wh.user_id
-        LEFT JOIN states s ON wh.state_id = s.id
-        WHERE wh.state_id > 1
-        ORDER BY wh.updated_at desc LIMIT 6
+        LEFT JOIN histories h ON u.id = h.user_id
+        LEFT JOIN states s ON h.state_id = s.id
+        WHERE h.state_id > 1
+        ORDER BY h.updated_at desc LIMIT 6
         `
     )
 }

@@ -180,7 +180,7 @@ const getWallet = async (userId) => {
         `
     )
 }
-    
+
 const initPoint = async (userId, rePoint) => {
     return await AppDataSource.query(
         `
@@ -193,7 +193,7 @@ const initPoint = async (userId, rePoint) => {
     )
 }
 
-const exchangeReq = async ( userId, allToken, addToken ) => {
+const exchangeReq = async (userId, allToken, addToken) => {
     return await AppDataSource.query(
         `
         INSERT INTO wallet_histories(
@@ -204,7 +204,7 @@ const exchangeReq = async ( userId, allToken, addToken ) => {
     )
 }
 
-const existsUserWH = async ( userId ) => {
+const existsUserWH = async (userId) => {
     return await AppDataSource.query(
         `
         SELECT EXISTS(
@@ -217,7 +217,7 @@ const existsUserWH = async ( userId ) => {
     )
 }
 
-const existsStateWH = async ( userId ) => {
+const existsStateWH = async (userId) => {
     return await AppDataSource.query(
         `
         SELECT
@@ -228,7 +228,7 @@ const existsStateWH = async ( userId ) => {
     )
 }
 
-const patchExReq = async ( userId, addToken ) => {
+const patchExReq = async (userId, addToken) => {
     return await AppDataSource.query(
         `
         UPDATE

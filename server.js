@@ -1,30 +1,29 @@
-const http = require("http");
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 
 const { createApp } = require("./app");
 const { AppDataSource } = require("./src/models/datasource");
 
-const startServer = async () => {
-    const app = createApp();
+const startServer = async ()=>{
+        const PORT = process.env.PORT
+        const app = createApp();
 
-    app.get("/ping", (req, res) => {
-        res.json({ message: "pong" });
-    });
-
-    const server = http.createServer(app);
-    const PORT = process.env.PORT;
-
-    await AppDataSource.initialize()
+        AppDataSource
+        .initialize()
         .then(() => {
-            console.log("Data Source has been initialized");
+            console.log("Data Source has been initialized!");
         })
         .catch((err) => {
-            console.error("Error during Data Source initialization", err);
+            console.error("Error occurred during Data Source initialization", err);
+            AppDataSource.destroy();
+        });
+
+        app.get("/ping", (req,res)=>{
+            res.status(200).json({message : "pong"});
         })
 
-    server.listen(PORT, () => {
-        console.log(`🚀 Listening on Port ${PORT} 🚀`);
-    });
+        app.listen(PORT, ()=>{
+            console.log(`🚀 Listening on Port ${PORT} 🚀`)
+        });
 }
-
 startServer();

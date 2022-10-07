@@ -78,23 +78,23 @@ const exchangeReq = async (userId) => {
     const point = Object.values(getPoint[0])[1]
     const existsUser = await userDashboardDao.existsUserWH(userId);
     const existsState = await userDashboardDao.existsStateWH(userId);
-    
+
     let user, state;
 
-    if(Object.values(existsUser[0])[0] === '1') {
-    user = Object.values(existsUser[0])[0]
-    state = Object.values(existsState[0])[0]
+    if (Object.values(existsUser[0])[0] === '1') {
+        user = Object.values(existsUser[0])[0]
+        state = Object.values(existsState[0])[0]
     }
 
     if (point < 1000) throw new Error("LACK OF POINT", 400)
     if (state === 1) throw new Error("ONE TO ONE", 400)
-    
-    let dePoint = point - parseInt((point+'').split('').splice(-3).join(''))
-    let rePoint = parseInt((point+'').split('').splice(-3).join(''))
-    let addToken = (dePoint+'').replace(/0{3}$/g,'')*1
-    
+
+    let dePoint = point - parseInt((point + '').split('').splice(-3).join(''))
+    let rePoint = parseInt((point + '').split('').splice(-3).join(''))
+    let addToken = (dePoint + '').replace(/0{3}$/g, '') * 1
+
     await userDashboardDao.initPoint(userId, rePoint)
-    
+
     if (user === '1') {
         return await userDashboardDao.patchExReq(userId, addToken)
     }
