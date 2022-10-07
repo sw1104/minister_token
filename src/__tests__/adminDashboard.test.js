@@ -53,9 +53,9 @@ describe("GET ADMIN DASHBOARD INFO", () => {
         .get("/admin/members")
         .set("accessToken", ACCESS_TOKEN)
         .expect(200)
-        .expect(
-            [{"member": '3'}]
-        )
+        // .expect(
+        //     [{"member": '5'}]
+        // )
     });
 
     test("SUCCESS: get personal info", async () => {
@@ -255,38 +255,3 @@ describe("GET ADMIN DASHBOARD INFO", () => {
         )
     });
 });
-
-// describe("PATCH approve & reject", () => {
-//     let app;
-//     beforeAll(async () => {
-//         app = createApp();
-//         await AppDataSource.initialize();
-//         await AppDataSource.query(
-//             `
-//             INSERT INTO 
-//             `
-//         )
-//     });
-
-//     afterAll(async () => {
-//         await AppDataSource.destroy();
-//     });
-
-//         // test("SUCCESS: patch approve", async () => {
-//     //     await request(app)
-//     //     .patch("/admin/token/approve")
-//     //     .set("accessToken", ACCESS_TOKEN)
-//     //     .set({"array": ['1']})
-//     //     .set({"userIdArray": ['1']})
-//     //     .expect(200)
-//     // });
-
-//     // test("SUCCESS: patch reject", async () => {
-//     //     await request(app)
-//     //     .patch("/admin/token/reject")
-//     //     .set("accessToken", ACCESS_TOKEN)
-//     //     .set({"array": ['1']})
-//     //     .set({"userIdArray": ['1']})
-//     //     .expect(200)
-//     // });
-// });
