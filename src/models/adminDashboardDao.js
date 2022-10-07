@@ -1,46 +1,5 @@
 const { AppDataSource } = require("./datasource")
 
-// const getDashboard = async ( grade ) => {
-//     const result = await AppDataSource.query(
-//         `
-//         SELECT 
-//             full_token as fullToken
-//         FROM master_wallets;
-
-//         SELECT
-//             mw.full_token - sum(w.all_token) as remainToken
-//         FROM master_wallets mw 
-//         INNER JOIN wallets w GROUP BY mw.full_token;
-
-//         SELECT
-//             sum(all_token) as issuedToken
-//         FROM wallets;
-
-//         SELECT
-//             count(*) - 1 as members
-//         FROM users;
-
-//         SELECT
-//         JSON_ARRAYAGG(
-//             JSON_OBJECT(
-//         user_id,
-//         all_token
-//         )) AS personalToken
-//         FROM wallets;
-
-//         SELECT 
-//         JSON_ARRAYAGG(
-//             JSON_OBJECT(
-//         user_id,
-//         all_token
-//         )) AS newIssuedToken
-//         FROM wallets
-//         ORDER BY updated_at desc;
-//         `
-//     )
-//     return result
-// }
-
 const getFullToken = async () => {
     return await AppDataSource.query(
         `
@@ -168,7 +127,6 @@ const patchStateApprove = async (applyNo) => {
 }
 
 const patchStateReject = async (applyNo) => {
-    console.log(applyNo);
     return await AppDataSource.query(
         `
         UPDATE wallet_histories wh SET state_id = 3 WHERE wh.id = ${applyNo}
@@ -177,7 +135,6 @@ const patchStateReject = async (applyNo) => {
 }
 
 module.exports = {
-    // getDashboard
     getFullToken,
     getRemainToken,
     getIssuedToken,
