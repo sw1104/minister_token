@@ -170,17 +170,75 @@ const gradeUp = async (userId, gradeId) => {
     )
 }
 
-const exchangeReq = async (userId) => {
+const getWallet = async (userId) => {
     return await AppDataSource.query(
         `
         SELECT 
-            u.email,
-            u.point,
-            u.grade_id,
-            w.all_token
-        FROM users u
-        INNER JOIN wallets w ON u.id = w.user_id
-        WHERE u.id = ${userId}
+            id
+        FROM wallets w
+        WHERE w.user_id = ${userId}
+        `
+    )
+}
+
+const initPoint = async (userId, rePoint) => {
+    return await AppDataSource.query(
+        `
+        UPDATE 
+            users
+        SET
+            point = ${rePoint}
+        WHERE id = ${userId}
+        `
+    )
+}
+
+const exchangeReq = async (userId, allToken, addToken) => {
+    return await AppDataSource.query(
+        `
+        INSERT INTO wallet_histories(
+            user_id, all_token, add_token, use_token, stack_token, collect_token, state_id
+        ) VALUES (?,?,?,0,0,0,1)
+        `,
+        [`${userId}`, `${allToken}`, `${addToken}`]
+    )
+}
+
+const existsUserWH = async (userId) => {
+    return await AppDataSource.query(
+        `
+        SELECT EXISTS(
+            SELECT
+                user_id
+            FROM wallet_histories
+            WHERE user_id = ${userId}
+        )
+        `
+    )
+}
+
+const existsStateWH = async (userId) => {
+    return await AppDataSource.query(
+        `
+        SELECT
+            state_id
+        FROM wallet_histories w
+        WHERE w.user_id = ${userId}
+        `
+    )
+}
+
+const patchExReq = async (userId, addToken) => {
+    return await AppDataSource.query(
+        `
+        UPDATE
+            wallet_histories AS wh
+        INNER JOIN wallets AS w ON wh.user_id = w.user_id 
+        SET
+            wh.all_token = w.all_token,
+            wh.add_token = ${addToken},
+            wh.state_id = 1
+        WHERE wh.user_id = ${userId}
         `
     )
 }
@@ -199,5 +257,10 @@ module.exports = {
     getRemainToken,
     getCumulativeToken,
     gradeUp,
-    exchangeReq
+    getWallet,
+    initPoint,
+    exchangeReq,
+    existsUserWH,
+    patchExReq,
+    existsStateWH
 }

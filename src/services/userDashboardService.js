@@ -1,5 +1,5 @@
 const userDashboardDao = require("../models/userDashboardDao")
-const Error = require("../middlewares/errorHandler")
+const Error = require("../middlewares/errorConstructor")
 
 
 const getPoint = async (userId) => {
@@ -33,7 +33,7 @@ const getTokenUseHistory = async (userId) => {
 const createWallet = async (userId) => {
     const duplicateWallet = await userDashboardDao.duplicateWallet(userId)
 
-    if (duplicateWallet === 1) throw new Error("WALLET DUPLICATE", 400);
+    if (Object.values(duplicateWallet[0])[0] === '1') return await userDashboardDao.getAllToken(userId)
 
     await userDashboardDao.createWallet(userId);
 
@@ -72,13 +72,33 @@ const buyProduct = async (userId, productId) => {
 }
 
 const exchangeReq = async (userId) => {
-    const getPoint = await userDashboardDao.getPoint(userId)
-
+    const getPoint = await userDashboardDao.getPoint(userId);
+    const getAllToken = await userDashboardDao.getAllToken(userId);
+    const allToken = Object.values(getAllToken[0])[0];
     const point = Object.values(getPoint[0])[1]
+    const existsUser = await userDashboardDao.existsUserWH(userId);
+    const existsState = await userDashboardDao.existsStateWH(userId);
 
-    if (point < 1000) throw new Error("NOT NORMAL USER", 400)
+    let user, state;
 
-    return await userDashboardDao.exchangeReq(userId)
+    if (Object.values(existsUser[0])[0] === '1') {
+        user = Object.values(existsUser[0])[0]
+        state = Object.values(existsState[0])[0]
+    }
+
+    if (point < 1000) throw new Error("LACK OF POINT", 400)
+    if (state === 1) throw new Error("ONE TO ONE", 400)
+
+    let dePoint = point - parseInt((point + '').split('').splice(-3).join(''))
+    let rePoint = parseInt((point + '').split('').splice(-3).join(''))
+    let addToken = (dePoint + '').replace(/0{3}$/g, '') * 1
+
+    await userDashboardDao.initPoint(userId, rePoint)
+
+    if (user === '1') {
+        return await userDashboardDao.patchExReq(userId, addToken)
+    }
+    return await userDashboardDao.exchangeReq(userId, allToken, addToken)
 }
 module.exports = {
     getPoint,

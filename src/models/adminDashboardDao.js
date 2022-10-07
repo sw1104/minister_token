@@ -1,46 +1,5 @@
 const { AppDataSource } = require("./datasource")
 
-// const getDashboard = async ( grade ) => {
-//     const result = await AppDataSource.query(
-//         `
-//         SELECT 
-//             full_token as fullToken
-//         FROM master_wallets;
-
-//         SELECT
-//             mw.full_token - sum(w.all_token) as remainToken
-//         FROM master_wallets mw 
-//         INNER JOIN wallets w GROUP BY mw.full_token;
-
-//         SELECT
-//             sum(all_token) as issuedToken
-//         FROM wallets;
-
-//         SELECT
-//             count(*) - 1 as members
-//         FROM users;
-
-//         SELECT
-//         JSON_ARRAYAGG(
-//             JSON_OBJECT(
-//         user_id,
-//         all_token
-//         )) AS personalToken
-//         FROM wallets;
-
-//         SELECT 
-//         JSON_ARRAYAGG(
-//             JSON_OBJECT(
-//         user_id,
-//         all_token
-//         )) AS newIssuedToken
-//         FROM wallets
-//         ORDER BY updated_at desc;
-//         `
-//     )
-//     return result
-// }
-
 const getFullToken = async () => {
     return await AppDataSource.query(
         `
@@ -111,13 +70,12 @@ const getNewIssuedToken = async () => {
     return await AppDataSource.query(
         `
         SELECT 
-            w.user_id, 
             u.email,
-            w.add_token,
-            w.updated_at
-        FROM wallets w
-        INNER JOIN users u ON u.id = w.user_id
-        ORDER BY w.updated_at desc
+            h.add_token
+        FROM histories h
+        INNER JOIN users u ON u.id = h.user_id
+        WHERE h.add_token > 0 AND h.state_id = 2
+        ORDER BY h.updated_at DESC LIMIT 24
         `
     )
 }
@@ -127,6 +85,7 @@ const getTokenInfo = async () => {
         `
         SELECT
             u.email,
+            u.id userId,
             g.grade,
             wh.id,
             wh.all_token,
@@ -146,6 +105,7 @@ const getExchangeInfo = async () => {
         `
         SELECT 
         u.email,
+        u.id userId,
 		wh.add_token,
         s.state,
         DATE_FORMAT(wh.updated_at, '%Y-%c-%e') AS date
@@ -161,22 +121,20 @@ const getExchangeInfo = async () => {
 const patchStateApprove = async (applyNo) => {
     return await AppDataSource.query(
         `
-        UPDAte wallet_histories wh SET state_id = 2 WHERE wh.id = ${applyNo}
+        UPDATE wallet_histories wh SET state_id = 2 WHERE wh.id = ${applyNo}
         `
     )
 }
 
 const patchStateReject = async (applyNo) => {
-    console.log(applyNo);
     return await AppDataSource.query(
         `
-        UPDAte wallet_histories wh SET state_id = 3 WHERE wh.id = ${applyNo}
+        UPDATE wallet_histories wh SET state_id = 3 WHERE wh.id = ${applyNo}
         `
     )
 }
 
 module.exports = {
-    // getDashboard
     getFullToken,
     getRemainToken,
     getIssuedToken,

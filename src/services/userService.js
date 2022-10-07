@@ -51,9 +51,9 @@ const signIn = async (email, password) => {
         const id = JSON.stringify(Object.values(payLoadId[0])[0]);
         const payLoadGrade = await userDao.getUserGradeByEmail(email);
         const grade = JSON.stringify(Object.values(payLoadGrade[0])[0]);
-        const refreshToken = jwt.sign({ exp : Math.floor(Date.now()/1000) + (60*1) }, process.env.JWT_SECRET);
-        const accessToken = jwt.sign({ userId : id, userGrade : grade, exp: Math.floor(Date.now()/1000) + (60*1) }, process.env.JWT_SECRET);
-        
+        const refreshToken = jwt.sign({ exp: Math.floor(Date.now() / 1000) + (60 * 1) }, process.env.JWT_SECRET);
+        const accessToken = jwt.sign({ userId: id, userGrade: grade, exp: Math.floor(Date.now() / 1000) + (60 * 10) }, process.env.JWT_SECRET);
+
         return {
             refreshToken,
             accessToken,
@@ -66,8 +66,8 @@ const signIn = async (email, password) => {
         const id = JSON.stringify(Object.values(payLoadId[0])[0]);
         const payLoadGrade = await userDao.getUserGradeByEmail(email);
         const grade = JSON.stringify(Object.values(payLoadGrade[0])[0]);
-        const refreshToken = jwt.sign({ exp : Math.floor(Date.now()/1000) + (60*3) }, process.env.JWT_SECRET);
-        const accessToken = jwt.sign({ userId : id, userGrade : grade, exp: Math.floor(Date.now()/1000) + (3600 * 6) }, process.env.JWT_SECRET);
+        const refreshToken = jwt.sign({ exp: Math.floor(Date.now() / 1000) + (60 * 3) }, process.env.JWT_SECRET);
+        const accessToken = jwt.sign({ userId: id, userGrade: grade, exp: Math.floor(Date.now() / 1000) + (3600 * 6) }, process.env.JWT_SECRET);
         await userDao.addToken(email, refreshToken);
 
         return {
@@ -88,7 +88,7 @@ const checkRefresh = async (userId, refreshToken) => {
         const id = JSON.stringify(Object.values(payLoadId[0])[0]);
         const payLoadGrade = await userDao.getUserGradeByUserId(email);
         const grade = JSON.stringify(Object.values(payLoadGrade[0])[0]);
-        const accessToken = jwt.sign({ userId : id, userGrade : grade, exp: Math.floor(Date.now()/1000) + (3660*10) }, process.env.JWT_SECRET);
+        const accessToken = jwt.sign({ userId: id, userGrade: grade, exp: Math.floor(Date.now() / 1000) + (3660 * 10) }, process.env.JWT_SECRET);
 
         return accessToken
     } else {

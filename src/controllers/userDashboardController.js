@@ -75,7 +75,7 @@ const exchangeReq = async (req, res) => {
     if (!userId) throw new Error("KEY ERROR", 400)
 
     const data = await userDashboardService.exchangeReq(userId);
-    res.status(201).json(data)
+    res.status(201).json({ message: "REQUEST TO TOKEN EXCHANGE BY POINT" })
 }
 
 module.exports = {

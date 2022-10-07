@@ -16,9 +16,9 @@ const signIn = async (req, res) => {
     } else {
         const process = await userService.signIn(email, password);
         if ( process.message == "HELLO" ) {
-            res.status(201).json({"message" : "HELLO", "refreshToken" : process.refreshToken, "accessToken" : process.accessToken});
+            res.status(200).json({"message" : "HELLO", "refreshToken" : process.refreshToken, "accessToken" : process.accessToken});
         }  else {
-            res.status(201).json({"message" : "WELCOME", "refreshToken" : process.refreshToken, "accessToken" : process.accessToken});
+            res.status(200).json({"message" : "WELCOME", "refreshToken" : process.refreshToken, "accessToken" : process.accessToken});
         }
     }
 
